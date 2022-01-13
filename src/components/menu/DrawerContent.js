@@ -30,6 +30,29 @@ function DrawerContent(props) {
                     source={{ uri: 'https://icon-library.com/images/home-icon-vector/home-icon-vector-15.jpg' }} />}
                 onPress={() => alert("ok")}
             />
+            <DrawerItem
+                label={'Login'}
+                onPress={() => navigation.navigate('Login')}
+            />
+
+            <DrawerItem
+                label={'Inscription'}
+                onPress={() => navigation.navigate('SignUp')}
+            />
+
+            <DrawerItem
+                label={'Ajouter Un Catalogue'}
+                onPress={() => navigation.navigate('AddCatalogue')}
+            />
+
+            <DrawerItem
+                label={'Profile'}
+                onPress={() => navigation.navigate('Profile')}
+            />
+            <DrawerItem
+                label={'Liste de Mes Catalogues'}
+                onPress={() => navigation.navigate('MyCatalogue')}
+            />
         </DrawerContentScrollView>
     );
 }

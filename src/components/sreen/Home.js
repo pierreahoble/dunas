@@ -1,10 +1,12 @@
 import React from 'react'
-import { StyleSheet, View, Text, Button, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native';
+import Button from '../composent/Button';
+import CustInputP from '../composent/CustInput';
 
 const Home = (props) => {
 
     const goToLogin = () => {
-        props.navigation.navigate('Detail')
+        props.navigation.navigate('SignUp')
     }
 
 
@@ -14,7 +16,9 @@ const Home = (props) => {
             <Text style={styles.text}>
                 Home Screen
             </Text>
-            <Button title='Aller Login' onPress={goToLogin} />
+            <Button text='Aller A Login' onPress={goToLogin} />
+            <CustInputP keyboardType='numeric' />
+
 
         </View>
     )
