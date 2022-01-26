@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 
 
 
@@ -9,17 +9,21 @@ import Home from '../sreen/Home';
 import LoginScreen from '../sreen/LoginScreen'
 import DetailScreen from '../sreen/DetailScreen'
 import Icon from 'react-native-vector-icons/Ionicons';
+import { DrawerActions } from '@react-navigation/native';
 
 import DrawerContent from './DrawerContent';
 import SignUpSreen from '../sreen/SingUpScreen';
 import AddCatalogueScreen from '../sreen/AddCatalogueScreen';
 import ProfileScreen from '../sreen/ProfileScreen';
 import MyCatalogue from '../sreen/MyCatalogue';
+import SecureStorage from 'react-native-secure-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AuthContext from '../../context/AuthContext';
 
 
 
 const Drawer = createDrawerNavigator();
-
+const Stack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
 const DetailStack = createNativeStackNavigator();
 const LoginStack = createNativeStackNavigator();
@@ -33,11 +37,12 @@ const MyCataStack = createNativeStackNavigator();
 const HomeStackScreeen = ({ navigation }) => {
     return (
         <HomeStack.Navigator>
-            <HomeStack.Screen name='HomeAccueil' component={Home}
+            <HomeStack.Screen name='Home' component={Home}
                 options={{
                     title: 'Accueil',
+                    headerTitle: { fontWeigth: '200', fontSize: 50, fontFamily: 'PTSans-Regular' },
                     headerLeft: () => (
-                        <Icon name='menu' size={50} color={'black'} onPress={() => navigation.openDrawer()} />)
+                        <Icon name='menu' size={30} color={'black'} onPress={() => navigation.openDrawer()} />)
                 }} />
         </HomeStack.Navigator>
     )
@@ -50,8 +55,10 @@ const DetailStackScreen = ({ navigation }) => {
             <DetailStack.Screen name='DetailScreen' component={DetailScreen}
                 options={{
                     title: 'Details',
+                    headerTitle: { fontWeigth: '200', fontSize: 50, fontFamily: 'PTSans-Regular' },
                     headerLeft: () => (
-                        <Icon name='menu' size={50} color={'black'} onPress={() => navigation.openDrawer()} />)
+                        <Icon name='md-return-up-back' size={30} color={'black'} onPress={() => navigation.goBack()} />),
+                    presentation: 'card',
                 }}
             />
         </DetailStack.Navigator>
@@ -62,13 +69,9 @@ const DetailStackScreen = ({ navigation }) => {
 //Login
 const LoginStackScreeen = ({ navigation }) => {
     return (
-        <LoginStack.Navigator>
+        <LoginStack.Navigator >
             <LoginStack.Screen name='LoginSreen' component={LoginScreen}
-            // options={{
-            //     title: 'Login',
-            //     headerLeft: () => (
-            //         <Icon name='menu' size={50} color={'black'} onPress={() => navigation.openDrawer()} />)
-            // }}
+                options={{ headerShown: false }}
             />
         </LoginStack.Navigator>
     )
@@ -79,7 +82,10 @@ const LoginStackScreeen = ({ navigation }) => {
 const SignUpStackScreeen = ({ navigation }) => {
     return (
         <SingUpStack.Navigator>
-            <SingUpStack.Screen name='SingUpScreen' component={SignUpSreen}
+            <SingUpStack.Screen
+                name='SingUpScreen'
+                component={SignUpSreen}
+                options={{ headerShown: false }}
             />
         </SingUpStack.Navigator>
     )
@@ -92,9 +98,10 @@ const AddCatalogueStackScreen = ({ navigation }) => {
         <AddCataStack.Navigator>
             <AddCataStack.Screen name='CatalogueScreen' component={AddCatalogueScreen}
                 options={{
+                    headerTitle: { fontWeigth: '200', fontSize: 50, fontFamily: 'PTSans-Regular' },
                     title: 'Ajouter Un Catalogue',
                     headerLeft: () => (
-                        <Icon name='menu' size={50} color={'black'} onPress={() => navigation.openDrawer()} />)
+                        <Icon name='menu' size={30} color={'black'} onPress={() => navigation.openDrawer()} />)
                 }}
             />
         </AddCataStack.Navigator>
@@ -109,8 +116,9 @@ const ProfileStackScreen = ({ navigation }) => {
             <ProfileStack.Screen name='ProfileScreen' component={ProfileScreen}
                 options={{
                     title: 'Mon Profile',
+                    headerTitle: { fontWeigth: '200', fontSize: 50, fontFamily: 'PTSans-Regular' },
                     headerLeft: () => (
-                        <Icon name='menu' size={50} color={'black'} onPress={() => navigation.openDrawer()} />)
+                        <Icon name='menu' size={30} color={'black'} onPress={() => navigation.openDrawer()} />)
                 }}
             />
         </ProfileStack.Navigator>
@@ -126,8 +134,9 @@ const MyCatalaStackScreen = ({ navigation }) => {
             <MyCataStack.Screen name='MyCataLogueScreee' component={MyCatalogue}
                 options={{
                     title: 'La liste de mes catalogues',
+                    headerTitle: { fontWeigth: '200', fontSize: 50, fontFamily: 'PTSans-Regular' },
                     headerLeft: () => (
-                        <Icon name='menu' size={50} color={'black'} onPress={() => navigation.openDrawer()} />)
+                        <Icon name='menu' size={30} color={'black'} onPress={() => navigation.openDrawer()} />)
                 }}
             />
         </MyCataStack.Navigator>
@@ -138,25 +147,77 @@ const MyCatalaStackScreen = ({ navigation }) => {
 
 
 
-const Routes = () => {
-    return (
-        <NavigationContainer>
 
+const Routes = ({ navigation }) => {
+    const [loading, setLoading] = useState(0)
+    const contextValue = useContext(AuthContext)
+    const { isLogin, setIsLogin } = contextValue
+
+
+
+    //Effacer les valeurs en session
+    const removeData = async (key) => {
+        try {
+            await AsyncStorage.removeItem(key);
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    }
+
+    async function getLogin() {
+        const val = await AsyncStorage.getItem('isLogin').then(value => {
+            value ? setIsLogin(value) : console.log(value);
+        })
+    }
+
+
+
+
+    useEffect(() => {
+
+    }, [])
+
+    return (
+
+        <NavigationContainer>
             <Drawer.Navigator
-                screenOptions={{ headerShown: false }}
+                screenOptions={{ headerShown: false, }}
                 drawerContent={(props) => <DrawerContent {...props} />}
             >
-                <Drawer.Screen name="Home" component={HomeStackScreeen} />
-                <Drawer.Screen name="Detail" component={DetailStackScreen} />
-                <Drawer.Screen name="Login" component={LoginStackScreeen} />
-                <Drawer.Screen name="SignUp" component={SignUpStackScreeen} />
-                <Drawer.Screen name="AddCatalogue" component={AddCatalogueStackScreen} />
-                <Drawer.Screen name="Profile" component={ProfileStackScreen} />
-                <Drawer.Screen name="MyCatalogue" component={MyCatalaStackScreen} />
+                {
+                    isLogin == true ?
+                        <>
+                            <Drawer.Screen name="HomeAccueil" component={HomeStackScreeen} />
+                            <Drawer.Screen name="Detail" component={DetailStackScreen} />
+                            <Drawer.Screen name="AddCatalogue" component={AddCatalogueStackScreen} />
+                            <Drawer.Screen name="Profile" component={ProfileStackScreen} />
+                            <Drawer.Screen name="MyCatalogue" component={MyCatalaStackScreen} />
+                        </>
+                        :
+                        <>
+                            <Drawer.Screen name="Login" component={LoginStackScreeen} />
+                            <Drawer.Screen name="SignUp" component={SignUpStackScreeen} />
+                        </>
+                }
             </Drawer.Navigator>
 
         </NavigationContainer >
     )
 }
+
+const config = {
+    animation: 'spring',
+    config: {
+        stiffness: 1000,
+        damping: 500,
+        mass: 3,
+        overshootClamping: true,
+        restDisplacementThreshold: 0.01,
+        restSpeedThreshold: 0.01,
+    },
+};
+
 
 export default Routes;

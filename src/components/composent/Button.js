@@ -19,7 +19,7 @@ const Button = ({ onPress, text = 'Button', type = "PRIMARY" }) => {
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: '#00FF00',
+        backgroundColor: '#85c65c',
         width: "90%",
         height: 50,
         borderRadius: 7,
@@ -30,7 +30,8 @@ const styles = StyleSheet.create({
         padding: 9,
         fontSize: 25,
         fontWeight: '600',
-        color: 'white'
+        color: 'white',
+        fontFamily: 'PTSans-Regular'
     },
     container_DANGER: {
         backgroundColor: '#FF6600'

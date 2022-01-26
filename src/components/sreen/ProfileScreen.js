@@ -1,13 +1,11 @@
 import React from 'react'
 import { Text, View, StyleSheet } from 'react-native';
 
+import Card from '../composent/Card'
+
 const ProfileScreen = () => {
     return (
-        <View style={styles.container}>
-            <Text>
-                Je suis le profile
-            </Text>
-        </View>
+        <Card />
     )
 }
 

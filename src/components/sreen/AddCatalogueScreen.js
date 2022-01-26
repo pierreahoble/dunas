@@ -18,11 +18,10 @@ const AddCatalogueScreen = () => {
                 <Text style={styles.titre} >
                     Ajouter un Catalogue
                 </Text>
+                <CustInputP placeholder='Choisir le Fichier .png, .jpg' />
+                <Button text='Sauvegarder' onPress={addCatalogue} />
             </View>
 
-            <CustInputP placeholder='Choisir le Fichier .png, .jpg' />
-
-            <Button text='Sauvegarder' onPress={addCatalogue} />
 
         </ScrollView>
     )
@@ -30,12 +29,12 @@ const AddCatalogueScreen = () => {
 
 const styles = StyleSheet.create({
     base: {
-        backgroundColor: "white"
+        backgroundColor: "white",
     },
     container: {
         flex: 1,
-        alignItems: 'center',
         justifyContent: 'center',
+        alignItems: 'center',
     },
     titre: {
         margin: 5,
@@ -43,8 +42,9 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         padding: 30,
         fontWeight: '400',
-        color: 'black'
-    }
+        color: 'black',
+        fontFamily: 'PTSans-Regular'
+    },
 })
 
 export default AddCatalogueScreen;

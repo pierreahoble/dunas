@@ -1,12 +1,13 @@
 import React from 'react'
 import { TextInput, View, StyleSheet } from 'react-native';
 
-const CustInputP = ({ setvalue, value, placeholder = 'Entrer du text', keyboardType = 'default', secureTextEntry = false }) => {
+const CustInputP = ({ setvalue, value, placeholder = 'Entrer du text', keyboardType = 'default', secureTextEntry = false, onchangeText }) => {
     return (
         <View style={styles.input}>
             <TextInput style={styles.inputbu}
                 value={value}
                 setvalue={setvalue}
+                onChangeText={onchangeText}
                 secureTextEntry={secureTextEntry}
                 keyboardType={keyboardType}
                 placeholder={placeholder} />
@@ -33,7 +34,8 @@ const styles = StyleSheet.create({
     },
     inputbu: {
         fontSize: 20,
-        fontWeight: '400'
+        fontWeight: '400',
+        fontFamily: 'PTSans-Regular'
     }
 })
 

@@ -1,18 +1,27 @@
-import React from 'react'
-import { StyleSheet, View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react'
+import { StyleSheet, View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Logo from '../../../assets/images/logos.jpg';
 import CustInputP from '../composent/CustInput';
 import Button from '../composent/Button';
 
 const SignUpSreen = (props) => {
 
-    const goToLogin = () => {
-        props.navigation.navigate('Login')
-    }
+    const [active, setActive] = useState(false)
 
     const register = () => {
-        alert('Inscription')
-        props.navigation.navigate('Home')
+        setActive(true)
+        setTimeout(() => {
+            props.navigation.navigate('HomeAccueil')
+            setActive(false)
+        }, 5000);
+    }
+
+    const goToLogin = () => {
+        setActive(true)
+        setTimeout(() => {
+            props.navigation.navigate('Login')
+            setActive(false)
+        }, 2000);
     }
 
     return (
@@ -32,11 +41,15 @@ const SignUpSreen = (props) => {
                 <TouchableOpacity
                     onPress={goToLogin}
                 >
-                    <Text style={styles.login}>
-                        Vous avez un compte ? Connectez-Vous ...
-                    </Text>
+                    {active ?
+                        <ActivityIndicator size={'large'} color={'#85c65c'} />
+                        :
+                        <Text style={styles.login}>
+                            Vous avez un compte ? Connectez-Vous ...
+                        </Text>
+                    }
                 </TouchableOpacity>
-
+                {/* {active ? <ActivityIndicator size={'large'} color={'#85c65c'} /> : null} */}
             </View>
 
         </ScrollView>
@@ -47,27 +60,30 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        paddingTop: 50,
     },
     text: {
         fontSize: 25,
-        fontWeight: 'bold'
+        fontFamily: 'PTSans-Bold',
+        color: 'black'
     },
     logo: {
         height: 150,
         maxWidth: "100%",
         borderRadius: 16,
         alignSelf: 'center',
-        margin: 5,
+        margin: 3,
         paddingTop: 5
     },
     base: {
         backgroundColor: 'white'
     },
     login: {
-        fontSize: 15,
-        fontWeight: '500',
-        color: '#00FF00'
+        fontSize: 16,
+        // fontWeight: '500',
+        color: '#85c65c',
+        fontFamily: 'PTSans-Regular'
     }
 })
 
