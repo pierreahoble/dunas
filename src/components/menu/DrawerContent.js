@@ -4,31 +4,56 @@ import {
     DrawerItemList,
     DrawerItem
 } from '@react-navigation/drawer';
-import { Image, View, Text, StyleSheet } from 'react-native';
+import {
+    Image,
+    View,
+    Text,
+    StyleSheet,
+    ActivityIndicator,
+    TouchableOpacity,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../context/AuthContext';
 
 
 function DrawerContent(props) {
+    const [active, setActive] = useState(false)
+    const [authUser, setAuthUser] = useState([])
     const { isLogin, setIsLogin } = useContext(AuthContext)
     const { user, setUser } = useContext(AuthContext)
 
+    // const { name, roles } = user.user ? user : ''
+
     const getLog = async () => {
         setIsLogin(await AsyncStorage.getItem('isLogin'))
-        // setUser(await AsyncStorage.getItem('user'))
+        setUser(await AsyncStorage.getItem('user'))
+    }
 
+    const getAuthUser = async () => {
+        try {
+            const valUser = await AsyncStorage.getItem('user')
+            setAuthUser(JSON.parse(valUser))
+
+        } catch (error) {
+
+        }
     }
 
 
     useEffect(() => {
         getLog()
+        getAuthUser()
     }, [])
 
     const logout = async () => {
+        setActive(true)
         setIsLogin(false)
         await AsyncStorage.setItem('isLogin', 'false')
-        props.navigation.navigate('Login')
+        setTimeout(() => {
+            props.navigation.navigate('Login')
+            setActive(false)
+        }, 1000);
     }
 
     var color = '#85c65c'
@@ -44,10 +69,10 @@ function DrawerContent(props) {
                 <Image style={styles.image}
                     source={{ uri: 'https://st.depositphotos.com/2101611/3925/v/600/depositphotos_39258143-stock-illustration-businessman-avatar-profile-picture.jpg' }} />
                 <Text style={styles.text}>
-                    Pierre AHOBLE
+                    {authUser ? authUser.name : ''}
                 </Text>
                 <Text style={styles.caption}>
-                    Client
+                    {authUser ? authUser.roles : ''}
                 </Text>
             </View>
             <DrawerItem
@@ -94,6 +119,18 @@ function DrawerContent(props) {
                 onPress={logout}
                 icon={() => <Icon name='log-out' size={20} color={color} />}
             />
+            {active && <ActivityIndicator size={'large'} color={'#85c65c'} />}
+
+            {
+                authUser?.roles === 'Consultant' &&
+                <TouchableOpacity style={styles.button}
+                    onPress={() => navigation.navigate('Entreprise')}
+                >
+                    <Text style={styles.text_button}>Devenir Operateur </Text>
+                </TouchableOpacity>
+            }
+
+
         </DrawerContentScrollView>
     );
 }
@@ -113,6 +150,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
         fontSize: 15,
         fontFamily: 'PTSans-Regular',
+        fontWeight: 'bold'
     },
     icon: {
         width: 80,
@@ -122,9 +160,33 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontFamily: 'PTSans-Regular',
     },
+    label_C: {
+        fontSize: 20,
+        fontFamily: 'PTSans-Regular',
+        justifyContent: 'center',
+        backgroundColor: '#85c65c',
+        width: "100%",
+        height: 30,
+        margin: 15,
+    },
     caption: {
         fontSize: 15,
         fontFamily: 'PTSans-Regular',
+    },
+    button: {
+        backgroundColor: '#85c65c',
+        width: "90%",
+        height: 50,
+        borderRadius: 7,
+        margin: 10,
+    },
+    text_button: {
+        alignSelf: 'center',
+        padding: 9,
+        fontSize: 20,
+        fontWeight: '600',
+        color: 'white',
+        fontFamily: 'PTSans-Regular'
     }
 })
 export default DrawerContent;

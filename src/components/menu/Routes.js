@@ -16,7 +16,8 @@ import SignUpSreen from '../sreen/SingUpScreen';
 import AddCatalogueScreen from '../sreen/AddCatalogueScreen';
 import ProfileScreen from '../sreen/ProfileScreen';
 import MyCatalogue from '../sreen/MyCatalogue';
-import SecureStorage from 'react-native-secure-storage'
+import Entrepreneur from '../sreen/Entrepreneur';
+import Formulaire from '../sreen/Formulaire';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from '../../context/AuthContext';
 
@@ -31,6 +32,8 @@ const SingUpStack = createNativeStackNavigator();
 const AddCataStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
 const MyCataStack = createNativeStackNavigator();
+const EntrepreneurStack = createNativeStackNavigator();
+const FormulaireStack = createNativeStackNavigator();
 
 
 //Home - Acceuil
@@ -144,6 +147,41 @@ const MyCatalaStackScreen = ({ navigation }) => {
 }
 
 
+//Suivant Forme
+const FormulaireStackSreen = ({ navigation }) => {
+    return (
+        <FormulaireStack.Navigator>
+            <FormulaireStack.Screen name='FormulaireSreen' component={Formulaire}
+                options={{
+                    title: 'Devenir Une Entreprise',
+                    headerTitle: { fontWeigth: '200', fontSize: 50, fontFamily: 'PTSans-Regular' },
+                    headerLeft: () => (
+                        <Icon name='arrow-back' size={30} color={'black'} onPress={() => navigation.navigate('Entreprise')} />)
+                }}
+            />
+        </FormulaireStack.Navigator>
+    )
+}
+
+
+//Entrepise Forme
+const EntrepreneurStackSreen = ({ navigation }) => {
+    return (
+        <EntrepreneurStack.Navigator>
+            <EntrepreneurStack.Screen name='EntrepreneurSreen' component={Entrepreneur}
+                options={{
+                    title: 'Devenir Une Entreprise',
+                    headerTitle: { fontWeigth: '200', fontSize: 50, fontFamily: 'PTSans-Regular' },
+                    headerLeft: () => (
+                        <Icon name='arrow-back' size={30} color={'black'} onPress={() => navigation.goBack()} />)
+                }}
+            />
+        </EntrepreneurStack.Navigator>
+    )
+}
+
+
+
 
 
 
@@ -168,7 +206,10 @@ const Routes = ({ navigation }) => {
 
     async function getLogin() {
         const val = await AsyncStorage.getItem('isLogin').then(value => {
-            value ? setIsLogin(value) : console.log(value);
+            value ? setIsLogin(value) : ''
+
+            console.log('==> ' + value);
+            console.log('==>islogin ' + isLogin);
         })
     }
 
@@ -176,7 +217,7 @@ const Routes = ({ navigation }) => {
 
 
     useEffect(() => {
-
+        getLogin()
     }, [])
 
     return (
@@ -187,13 +228,15 @@ const Routes = ({ navigation }) => {
                 drawerContent={(props) => <DrawerContent {...props} />}
             >
                 {
-                    isLogin == true ?
+                    isLogin === 'true' ?
                         <>
                             <Drawer.Screen name="HomeAccueil" component={HomeStackScreeen} />
                             <Drawer.Screen name="Detail" component={DetailStackScreen} />
                             <Drawer.Screen name="AddCatalogue" component={AddCatalogueStackScreen} />
                             <Drawer.Screen name="Profile" component={ProfileStackScreen} />
                             <Drawer.Screen name="MyCatalogue" component={MyCatalaStackScreen} />
+                            <Drawer.Screen name="Entreprise" component={EntrepreneurStackSreen} />
+                            <Drawer.Screen name="Formulaire" component={FormulaireStackSreen} />
                         </>
                         :
                         <>

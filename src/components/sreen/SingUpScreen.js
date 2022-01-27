@@ -3,17 +3,43 @@ import { StyleSheet, View, Text, ScrollView, Image, TouchableOpacity, ActivityIn
 import Logo from '../../../assets/images/logos.jpg';
 import CustInputP from '../composent/CustInput';
 import Button from '../composent/Button';
+import axios from 'axios';
 
 const SignUpSreen = (props) => {
+    const SERVER_URL = 'http://10.0.2.2:8000/'
 
     const [active, setActive] = useState(false)
+    const [nom, setNom] = useState('')
+    const [prenom, setPrenom] = useState('')
+    const [telephone, setTelephone] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [code, setCode] = useState('')
 
     const register = () => {
-        setActive(true)
-        setTimeout(() => {
-            props.navigation.navigate('HomeAccueil')
-            setActive(false)
-        }, 5000);
+        if (email == '' || password == '' || nom == '' || prenom == '' || telephone == '') {
+            alert('vous devez remplir tous les champs')
+        } else {
+            setActive(true)
+            axios.post(`${SERVER_URL}api/auth/signup`, {
+                'nom': nom,
+                'prenom': prenom,
+                'telephone': telephone,
+                'email': email,
+                'password': password,
+                'code': code
+            }).then((response) => {
+                console.log(response)
+                // if (response.data.status === 200) {
+                //     setTimeout(() => {
+                //         props.navigation.navigate('Login')
+                //         setActive(false)
+                //     }, 3000);
+
+                // }
+            })
+        }
+        setActive(false)
     }
 
     const goToLogin = () => {
@@ -32,11 +58,12 @@ const SignUpSreen = (props) => {
                     Inscription Client
                 </Text>
 
-                <CustInputP placeholder='Nom ' />
-                <CustInputP placeholder='Prénoms ' />
-                <CustInputP placeholder='Téléphone ' keyboardType='numeric' />
-                <CustInputP placeholder='Adresse Email' keyboardType='email-address' />
-                <CustInputP placeholder='Mot de passe' secureTextEntry />
+                <CustInputP placeholder='Nom' value={nom} onchangeText={value => setNom({ value })} />
+                <CustInputP placeholder='Prénoms' value={prenom} onchangeText={value => setPrenom({ value })} />
+                <CustInputP placeholder='Téléphone ' keyboardType='numeric' value={telephone} onchangeText={value => setTelephone({ value })} />
+                <CustInputP placeholder='Adresse Email' keyboardType='email-address' value={email} onchangeText={value => setEmail({ value })} />
+                <CustInputP placeholder='Mot de passe' secureTextEntry value={password} onchangeText={value => setPassword({ value })} />
+                <CustInputP placeholder="Code d'invation" value={code} onchangeText={value => setCode({ value })} />
                 <Button text='Inscription' onPress={register} />
                 <TouchableOpacity
                     onPress={goToLogin}
@@ -61,7 +88,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: 50,
+        paddingTop: 15,
     },
     text: {
         fontSize: 25,
@@ -73,7 +100,7 @@ const styles = StyleSheet.create({
         maxWidth: "100%",
         borderRadius: 16,
         alignSelf: 'center',
-        margin: 3,
+        margin: 1,
         paddingTop: 5
     },
     base: {

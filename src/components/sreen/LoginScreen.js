@@ -37,7 +37,10 @@ const LoginScreen = (props) => {
     //Stocker une chaine de caractere
     const storeDataString = async (name, value) => {
         try {
-            await AsyncStorage.setItem(name, value)
+            await AsyncStorage.setItem(name, value).then(value => {
+                setIsLogin('true')
+            })
+
         } catch (e) {
             // saving error
         }
@@ -89,12 +92,14 @@ const LoginScreen = (props) => {
         }).then((response) => {
             var data = response.data
             if (data.success == true) {
+                setActive(true)
                 setUser(data.user)
-                console.log(user);
-                setIsLogin(true)
                 storeData('user', data.user)
                 storeDataString('isLogin', 'true')
-                props.navigation.navigate('HomeAccueil')
+                setTimeout(() => {
+                    props.navigation.navigate('HomeAccueil')
+                    setActive(false)
+                }, 2000);
             }
 
         }).catch((Error) => {
@@ -118,7 +123,7 @@ const LoginScreen = (props) => {
         setTimeout(() => {
             props.navigation.navigate('SignUp')
             setActive(false)
-        }, 2000);
+        }, 1000);
     }
 
 

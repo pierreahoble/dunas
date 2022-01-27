@@ -28,9 +28,7 @@ const styles = StyleSheet.create({
         marginVertical: 7,
         // height: 40,
         margin: 12,
-        // borderWidth: 1,
-        // padding: 10,
-        // width: 100,
+        elevation: 5,
     },
     inputbu: {
         fontSize: 20,

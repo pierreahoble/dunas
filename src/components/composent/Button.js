@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 7,
         margin: 10,
+        elevation: 10,
     },
     text: {
         alignSelf: 'center',

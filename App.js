@@ -30,7 +30,7 @@ const App = ({ props }) => {
   async function getIsLogin() {
     const val = await AsyncStorage.getItem('isLogin').then(value => {
       value === true ? setIsLogin(value) : ''
-      console.log('isLogin ====>' + value);
+      // console.log('isLogin ====>' + value);
     })
     const valuser = await AsyncStorage.getItem('user').then(value => {
       setUser(value)
