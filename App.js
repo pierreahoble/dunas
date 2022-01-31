@@ -34,7 +34,7 @@ const App = ({ props }) => {
     })
     const valuser = await AsyncStorage.getItem('user').then(value => {
       setUser(value)
-      console.log(value)
+      // console.log(value)
     })
   }
 

@@ -24,7 +24,6 @@ const ProfileScreen = () => {
 
     useEffect(() => {
         getAuthUser()
-        console.log(user);
     }, [])
 
 

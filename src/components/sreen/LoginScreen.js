@@ -123,7 +123,7 @@ const LoginScreen = (props) => {
         setTimeout(() => {
             props.navigation.navigate('SignUp')
             setActive(false)
-        }, 1000);
+        }, 3000);
     }
 
 

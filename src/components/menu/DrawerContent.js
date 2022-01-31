@@ -44,16 +44,24 @@ function DrawerContent(props) {
     useEffect(() => {
         getLog()
         getAuthUser()
-    }, [])
+    }, [user])
 
     const logout = async () => {
         setActive(true)
         setIsLogin(false)
-        await AsyncStorage.setItem('isLogin', 'false')
-        setTimeout(() => {
-            props.navigation.navigate('Login')
-            setActive(false)
-        }, 1000);
+        try {
+            await AsyncStorage.removeItem('isLogin')
+            // await AsyncStorage.setItem('isLogin', 'false')
+            await AsyncStorage.removeItem('user')
+            setTimeout(() => {
+                props.navigation.navigate('Login')
+                setActive(false)
+            }, 1000);
+        } catch (error) {
+            console.log(error);
+        }
+
+
     }
 
     var color = '#85c65c'
@@ -122,9 +130,11 @@ function DrawerContent(props) {
             {active && <ActivityIndicator size={'large'} color={'#85c65c'} />}
 
             {
-                authUser?.roles === 'Consultant' &&
+                authUser?.roles === 'Client' &&
                 <TouchableOpacity style={styles.button}
-                    onPress={() => navigation.navigate('Entreprise')}
+                    onPress={() => navigation.navigate('Entreprise', {
+                        screen: 'EntrepreneurSreen'
+                    })}
                 >
                     <Text style={styles.text_button}>Devenir Operateur </Text>
                 </TouchableOpacity>

@@ -4,7 +4,7 @@ import {
     StyleSheet,
     ScrollView,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, cloneElement } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import CustInputP from '../composent/CustInput';
 import Button from '../composent/Button';
@@ -14,7 +14,15 @@ import Dropdown from '../composent/Dropdown';
 
 const Entrepreneur = (props) => {
 
+    const departements = ["Lolo-Bouenguidi", "Libreville", "Lombo-Bouenguidi", "Lopé"]
+
+
     const [formeJuridique, setFormeJuridique] = useState('')
+    const [departement, setDepartement] = useState('')
+    const [raison, setRaison] = useState('')
+    const [representant, setRepresentant] = useState('')
+    const [adresse, setAdresse] = useState('')
+    const [ville, setVille] = useState('')
 
 
 
@@ -22,8 +30,21 @@ const Entrepreneur = (props) => {
     const formes = ["Société", "Entreprise Indiviuelle"]
 
     const goToNext = () => {
-        // console.log(props)
-        props.navigation.navigate('Formulaire')
+        if (raison === '' || representant === '' || adresse === '' || ville === '') {
+            alert("Remplissez tous les champs")
+        } else {
+            props.navigation.navigate('Entreprise', {
+                screen: 'FormulaireScreen',
+                params: {
+                    formeJuridique,
+                    departement,
+                    raison,
+                    representant,
+                    adresse,
+                    ville
+                }
+            })
+        }
     }
 
     useEffect(() => {
@@ -36,15 +57,15 @@ const Entrepreneur = (props) => {
                 <Text style={styles.text}> REMPLIRE LES CHAMPS DU FORMULAIRE :</Text>
 
 
-                <CustInputP placeholder='Raison Sociale' />
+                <CustInputP placeholder='Raison Sociale' value={raison} onchangeText={value => setRaison(value)} />
                 <Dropdown titre='FORME JURIDIQUE' data={formes} value={formeJuridique} onValueChange={(itemValue, itemIndex) => setFormeJuridique({ itemValue })} />
-                <CustInputP placeholder='Représentant Légal' />
-                <CustInputP placeholder='Adresse' />
-                <CustInputP placeholder='Ville' />
+                <Dropdown titre='DEPARTEMENT' data={departements} value={departement} onValueChange={(itemValue, itemIndex) => setDepartement({ itemValue })} />
+                <CustInputP placeholder='Représentant Légal' value={representant} onchangeText={value => setRepresentant(value)} />
+                <CustInputP placeholder='Adresse' value={adresse} onchangeText={value => setAdresse(value)} />
+                <CustInputP placeholder='Ville' value={ville} onchangeText={value => setVille(value)} />
 
 
-
-                <Button text="Suivant ...>>" onPress={goToNext} />
+                <Button text="Enrégistrer" onPress={goToNext} />
 
                 {/* <CustInputP placeholder='Departement' />
                 <CustInputP placeholder='Province' />

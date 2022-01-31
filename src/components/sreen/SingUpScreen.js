@@ -29,14 +29,21 @@ const SignUpSreen = (props) => {
                 'password': password,
                 'code': code
             }).then((response) => {
-                console.log(response)
-                // if (response.data.status === 200) {
-                //     setTimeout(() => {
-                //         props.navigation.navigate('Login')
-                //         setActive(false)
-                //     }, 3000);
-
-                // }
+                setActive(true)
+                var server_response = response.data
+                console.log(server_response);
+                if (server_response.status === false) {
+                    alert(server_response.message)
+                    setActive(false)
+                } else if (server_response.status === 200) {
+                    setTimeout(() => {
+                        props.navigation.navigate('Login')
+                        setActive(false)
+                    }, 5000)
+                }
+            }).catch((error) => {
+                setActive(false)
+                alert("Un probleme est survenu lors de votre inscription inscrivez vous plutard ..!!!")
             })
         }
         setActive(false)
@@ -58,12 +65,12 @@ const SignUpSreen = (props) => {
                     Inscription Client
                 </Text>
 
-                <CustInputP placeholder='Nom' value={nom} onchangeText={value => setNom({ value })} />
-                <CustInputP placeholder='Prénoms' value={prenom} onchangeText={value => setPrenom({ value })} />
-                <CustInputP placeholder='Téléphone ' keyboardType='numeric' value={telephone} onchangeText={value => setTelephone({ value })} />
-                <CustInputP placeholder='Adresse Email' keyboardType='email-address' value={email} onchangeText={value => setEmail({ value })} />
-                <CustInputP placeholder='Mot de passe' secureTextEntry value={password} onchangeText={value => setPassword({ value })} />
-                <CustInputP placeholder="Code d'invation" value={code} onchangeText={value => setCode({ value })} />
+                <CustInputP placeholder='Nom' value={nom} onchangeText={value => setNom(value)} />
+                <CustInputP placeholder='Prénoms' value={prenom} onchangeText={value => setPrenom(value)} />
+                <CustInputP placeholder='Téléphone ' keyboardType='numeric' value={telephone} onchangeText={value => setTelephone(value)} />
+                <CustInputP placeholder='Adresse Email' keyboardType='email-address' value={email} onchangeText={value => setEmail(value)} />
+                <CustInputP placeholder='Mot de passe' secureTextEntry value={password} onchangeText={value => setPassword(value)} />
+                <CustInputP placeholder="Code d'invation" value={code} onchangeText={value => setCode(value)} />
                 <Button text='Inscription' onPress={register} />
                 <TouchableOpacity
                     onPress={goToLogin}

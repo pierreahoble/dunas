@@ -17,10 +17,7 @@ const Dropdown = ({ value, onValueChange, titre = 'Choississez une ville', data 
             <Picker style={styles.picker}
                 prompt={titre}
                 selectedValue={value}
-                onValueChange={onValueChange
-                    // (itemValue, itemIndex) =>
-                    // setValue(itemValue)
-                }>
+                onValueChange={onValueChange}>
                 {
                     data.map(libelle => <Picker.Item key={libelle} label={libelle} value={libelle} />)
                 }

@@ -4,41 +4,92 @@ import {
     StyleSheet,
     ScrollView
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import CustInputP from '../composent/CustInput';
 import Button from '../composent/Button';
 import Dropdown from '../composent/Dropdown';
 import TextArea from '../composent/TextArea';
+import AuthContext from '../../context/AuthContext';
+import axios from 'axios';
 
 
-const Formulaire = (props) => {
+
+const Formulaire = ({ route, navigation }) => {
+    const { user } = useContext(AuthContext)
+    const authUser = JSON.parse(user)
+    const SERVER_URL = 'http://10.0.2.2:8000/'
+    const { params } = route
+    const ville = JSON.stringify(params.ville)
+    const formeJuridique = JSON.stringify(params.formeJuridique)
+    const adresse = JSON.stringify(params.adresse)
+    const departement = JSON.stringify(params.departement)
+    const raison = JSON.stringify(params.raison)
+    const representant = JSON.stringify(params.representant)
+
+
+
     const [province, setProvince] = useState('')
-    const [departement, setDepartement] = useState('')
     const [domaine, setDomaine] = useState('')
     const [description, setDescription] = useState('')
+    const [telephone, setTelephone] = useState('')
 
+
+
+
+    const provinces = ["Estuaire", "Ougoué-Lolo", "Ougoué-Ivindo"]
 
 
     const save = () => {
-        alert(domaine)
+        if (province === '' || domaine === '' || description === '' || telephone === '') {
+            alert(province)
+            // alert('Remplissez tous les champs')
+        } else {
+            axios.post(`${SERVER_URL}api/update_compte`, {
+                province,
+                telephone,
+                domaine,
+                description,
+                ville,
+                raison,
+                representant,
+                adresse,
+                formeJuridique,
+                departement,
+                'id': authUser.id
+            }).then((response) => {
+                console.log(response);
+            })
+                .catch((error) => {
+                    console.log(error);
+                })
+        }
     }
 
-    const provinces = ["Estuaire", "Ougoué-Lolo", "Ougoué-Ivindo"]
-    const departements = ["Lolo-Bouenguidi", "Libreville", "Lombo-Bouenguidi", "Lopé"]
+
+
+    const log = () => {
+        console.log(authUser.id);
+    }
+
+
 
     return (
         <ScrollView >
             <View style={styles.container} >
                 <Text style={styles.text}> REMPLIRE LES CHAMPS DU FORMULAIRE :</Text>
 
-                <Dropdown titre='DEPARTEMENT' data={departements} value={departement} onValueChange={(itemValue, itemIndex) => setDepartement({ itemValue })} />
-                <Dropdown titre='PROVINCE' data={provinces} />
-                <CustInputP placeholder='Téléphone' keyboardType='numeric' />
+
+                <Dropdown titre='PROVINCE' data={provinces} onValueChange={(itemValue, itemIndex) => setProvince(itemValue)} />
+                <CustInputP placeholder='Téléphone +241 90 25 90 67' keyboardType='numeric' value={telephone} onchangeText={value => setTelephone(value)} />
                 <TextArea placeholder={"Domaine d'activité"} value={domaine} onChangeText={(value) => setDomaine(value)} />
                 <TextArea placeholder={"Description de votre d'activité"} value={description} onChangeText={(value) => setDescription(value)} />
                 <CustInputP placeholder="Choisir une Image de l'entreprise" />
 
                 <Button text="Enrégistrer" onPress={save} />
+
+
+
+                {/* <Button text="Console Log" onPress={log} /> */}
 
 
 
@@ -54,7 +105,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         paddingTop: 10,
-        marginVertical: 30,
+        marginVertical: 30
     },
     text: {
         margin: 5,
